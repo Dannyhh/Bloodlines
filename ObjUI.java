@@ -4,18 +4,13 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 
-public class ObjUI implements ActionListener {
+public class ObjUI extends UI {
    
-   boolean open;
    Object selected;
-   JFrame window;
-   Object next;
    
    public ObjUI (Object selected) {
-      open = true;
-      next = null;
       this.selected = selected;
-      window = new JFrame ();
+      window = new JFrame ("Bloodlines: " + selected.name);
       window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       window.setLayout(new GridBagLayout());
       renderAll();
@@ -23,13 +18,7 @@ public class ObjUI implements ActionListener {
       window.setVisible(true);
    }
    
-   public Object waitForNext () {
-      while (open) {
-      }
-      return next;
-   }
-   
-   private void renderAll () {
+   public void renderAll () {
       int width = 5;
       if (selected.supers.size() + 1 > width) {
          width = selected.supers.size() + 1;
@@ -52,138 +41,44 @@ public class ObjUI implements ActionListener {
       window.getContentPane().add(selectedLabel, rules);
       rules.gridwidth = 1;
       // Open Description
-      makeButton ("Open Description", "Open Description", (width / 2) - 1, 4, 0, rules);
-      /*JButton openDesc = new JButton ("Open Description");
-      openDesc.setActionCommand ("Open Description");
-      openDesc.addActionListener(this);
-      rules.gridx = width / 2 - 1;
-      rules.gridy = 4;
-      rules.ipady = 0;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(openDesc, rules);*/
+      super.makeButton ("Open Description", "Open Description", (width / 2) - 1, 4, 0, rules);
       // Deletes Selected
-      makeButton ("Delete", "Delete", (width / 2), 4, 0, rules);
-      /*JButton delete = new JButton ("Delete");
-      delete.setActionCommand ("Delete");
-      openDesc.addActionListener(this);
-      rules.gridx = (width / 2);
-      rules.gridy = 4;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(delete, rules);*/
+      super.makeButton ("Delete", "Delete", (width / 2), 4, 0, rules);
       // Exit Selected Set
-      makeButton ("Exit Set", "Exit Set", (width / 2) + 1, 4, 0, rules);
-      /*JButton exit = new JButton ("Exit Set");
-      exit.setActionCommand ("Exit Set");
-      openDesc.addActionListener(this);
-      rules.gridx = (width / 2) + 1;
-      rules.gridy = 4;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(exit, rules);*/
+      super.makeButton ("Exit Set", "Exit Set", (width / 2) + 1, 4, 0, rules);
       // Supers
       int count = 0;
       for (String superObj : selected.supers) {
          makeButton (superObj, superObj, count, 0, 20, rules);
-         /*JButton newButton = new JButton (superObj);
-         newButton.setActionCommand (superObj);
-         newButton.addActionListener(this);
-         rules.gridx = count;
-         rules.gridy = 0;
-         rules.ipady = 20;
-         rules.fill = GridBagConstraints.BOTH;
-         window.getContentPane().add(newButton, rules);*/
          // Delete connections
-         makeButton ("Delete", "Delete " + superObj, count, 1, 0, rules);
-         /*JButton newDelButton = new JButton ("Delete");
-         newDelButton.setActionCommand ("Delete " + superObj);
-         newDelButton.addActionListener(this);
-         rules.gridx = count;
-         rules.gridy = 1;
-         rules.ipady = 0;
-         rules.fill = GridBagConstraints.BOTH;
-         window.getContentPane().add(newDelButton, rules);*/
+         makeButton ("Delete", "Remove " + superObj, count, 1, 0, rules);
          count++;
       }
       // Adds supers
-      makeButton ("Add Upward Connection", "Add Upward Connection", width - 1, 0, 20, rules);
-      /*JButton addSuper = new JButton ("Add Upward Connection");
-      addSuper.setActionCommand ("Add Upward Connection");
-      openDesc.addActionListener(this);
-      rules.gridx = width - 1;
-      rules.gridy = 0;
-      rules.ipady = 20;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(addSuper, rules);*/
+      super.makeButton ("Add Upward Connection", "Add Upward Connection", width - 1, 0, 20, rules);
       // Subs
       count = 0;
       for (String subObj : selected.subs) {
          makeButton (subObj, subObj, count, 6, 20, rules);
-         /*JButton newButton = new JButton (subObj);
-         newButton.setActionCommand (subObj);
-         newButton.addActionListener(this);
-         rules.gridx = count;
-         rules.gridy = 6;
-         rules.ipady = 20;
-         rules.fill = GridBagConstraints.BOTH;
-         window.getContentPane().add(newButton, rules);*/
          // Delete connections
-         makeButton ("Delete", "Delete " + subObj, count, 7, 0, rules);
-         /*JButton newDelButton = new JButton ("Delete");
-         newDelButton.setActionCommand ("Delete " + subObj);
-         newDelButton.addActionListener(this);
-         rules.gridx = count;
-         rules.gridy = 7;
-         rules.ipady = 0;
-         rules.fill = GridBagConstraints.BOTH;
-         window.getContentPane().add(newDelButton, rules);*/
+         makeButton ("Delete", "Remove " + subObj, count, 7, 0, rules);
          count++;
       }
       // Adds subs
-      makeButton ("Add Downward Connection", "Add Downward Connection", width - 1, 6, 20, rules);
-      /*JButton addSub = new JButton ("Add Downward Connection");
-      addSub.setActionCommand ("Add Downward Connection");
-      openDesc.addActionListener(this);
-      rules.gridx = width - 1;
-      rules.gridy = 6;
-      rules.ipady = 20;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(addSub, rules);*/
+      super.makeButton ("Add Downward Connection", "Add Downward Connection", width - 1, 6, 20, rules);
       // Links
       count = 0;
       for (String linkedObj : selected.links) {
-         makeButton (linkedObj, linkedObj, ((count % 2) * (width - 2)) + ((1 + ((count % 2) * -2)) * (count / 2)), 3, 20, rules);
-         /*JButton newButton = new JButton (linkedObj);
-         newButton.setActionCommand (linkedObj);
-         newButton.addActionListener(this);
-         rules.gridx = ((count % 2) * (width - 2)) + ((1 + ((count % 2) * -2)) * (count / 2));
-         rules.gridy = 3;
-         rules.ipady = 20;
-         rules.fill = GridBagConstraints.BOTH;
-         window.getContentPane().add(newButton, rules);*/
+         super.makeButton (linkedObj, linkedObj, ((count % 2) * (width - 2)) + ((1 + ((count % 2) * -2)) * (count / 2)), 3, 20, rules);
          // Delete connections
-         makeButton ("Delete", "Delete " + linkedObj, ((count % 2) * (width - 2)) + ((1 + ((count % 2) * -2)) * (count / 2)), 4, 0, rules);
-         /*JButton newDelButton = new JButton ("Delete");
-         newDelButton.setActionCommand ("Delete " + linkedObj);
-         newDelButton.addActionListener(this);
-         rules.gridx = count;
-         rules.gridy = 4;
-         rules.ipady = 0;
-         rules.fill = GridBagConstraints.BOTH;
-         window.getContentPane().add(newDelButton, rules);*/
+         super.makeButton ("Delete", "Remove " + linkedObj, ((count % 2) * (width - 2)) + ((1 + ((count % 2) * -2)) * (count / 2)), 4, 0, rules);
          count++;
       }
       // Adds links
-      makeButton ("Add Link", "Add Link", width - 1, 3, 20, rules);
-      /*JButton addLink = new JButton ("Add Link");
-      addLink.setActionCommand ("Add Link");
-      openDesc.addActionListener(this);
-      rules.gridx = width - 1;
-      rules.gridy = 3;
-      rules.ipady = 20;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(addLink, rules);*/
+      super.makeButton ("Add Link", "Add Link", width - 1, 3, 20, rules);
    }
    
-   private void makeButton (String name, String command, int column, int row, int height, GridBagConstraints rules) {
+   /*private void makeButton (String name, String command, int column, int row, int height, GridBagConstraints rules) {
       JButton newButton = new JButton (name);
       newButton.setActionCommand (command);
       newButton.addActionListener(this);
@@ -192,19 +87,30 @@ public class ObjUI implements ActionListener {
       rules.ipady = height;
       rules.fill = GridBagConstraints.BOTH;
       window.getContentPane().add(newButton, rules);
-   }
+   }*/
    
    public void actionPerformed (ActionEvent clicked) {
       String command = clicked.getActionCommand();
       if (selected.supers.contains(command) || selected.subs.contains(command) || selected.links.contains(command)) {
          window.setVisible(false);
          window.dispose();
-         try {
-            next = new Object (command, selected.set);
-         } catch (FileNotFoundException e) {
-         } catch (IOException e) {
+         new ObjUI (new Object (command, selected.set));
+      } else if (command.contains("Remove")) {
+         window.setVisible(false);
+         window.dispose();
+         command = command.substring(7, command.length());
+         if (selected.supers.contains(command)) {
+            selected.deleteSuper(command, true);
+         } else if (selected.subs.contains(command)) {
+            selected.deleteSub(command, true);
+         } else if (selected.links.contains(command)) {
+            selected.deleteLink(command, true);
          }
-         open = false;
+         new ObjUI (selected);
+      } else if (command.contains("Exit")) {
+         window.setVisible(false);
+         window.dispose();
+         new SetUI ();
       }
    }
 }

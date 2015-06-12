@@ -11,25 +11,28 @@ public class Object {
    public ArrayList<String> subs = new ArrayList<String>();
    public ArrayList<String> links = new ArrayList<String>();
    
-   public Object (String name, String set) throws FileNotFoundException, IOException {
+   public Object (String name, String set) {
       this.name = name;
       this.set = set;
       boolean found = true;
-      File sourceFile = new File ("data\\" + set + "\\" + name + ".txt");
-      if (!sourceFile.exists()) {
-         sourceFile.createNewFile();
-      }
-      source = new Scanner (sourceFile);
-      description = "";
       try {
-         getSection(supers);
-         getSection(subs);
-         getSection(links);
-         if (source.hasNextLine()) {
-            description = source.nextLine();
+         File sourceFile = new File ("data\\" + set + "\\" + name + ".txt");
+         if (!sourceFile.exists()) {
+            sourceFile.createNewFile();
          }
-      } catch (NoSuchElementException e) {
-         update();
+         source = new Scanner (sourceFile);
+         description = "";
+         try {
+            getSection(supers);
+            getSection(subs);
+            getSection(links);
+            if (source.hasNextLine()) {
+               description = source.nextLine();
+            }
+         } catch (NoSuchElementException e) {
+            update();
+         }
+      } catch (Exception e) {
       }
    }
    
@@ -49,15 +52,15 @@ public class Object {
       description = replacement;
    }
    
-   public void deleteSuper (String superToDelete, boolean selected) throws FileNotFoundException, IOException {
+   public void deleteSuper (String superToDelete, boolean selected) {
       deleteConnection(superToDelete, supers, selected);
    }
    
-   public void deleteSub (String subToDelete, boolean selected) throws FileNotFoundException, IOException {
+   public void deleteSub (String subToDelete, boolean selected) {
       deleteConnection(subToDelete, subs, selected);
    }
    
-   public void deleteLink (String linkToDelete, boolean selected) throws FileNotFoundException, IOException {
+   public void deleteLink (String linkToDelete, boolean selected) {
       deleteConnection(linkToDelete, links, selected);
    }
    
@@ -73,12 +76,15 @@ public class Object {
       }
    }
    
-   private void update () throws FileNotFoundException {
-      PrintStream update = new PrintStream (new File ("data\\" + set + "\\" + name + ".txt"));
-      printCategory(supers, update);
-      printCategory(subs, update);
-      printCategory(links, update);
-      update.println(description);
+   private void update () {
+      try {
+         PrintStream update = new PrintStream (new File ("data\\" + set + "\\" + name + ".txt"));
+         printCategory(supers, update);
+         printCategory(subs, update);
+         printCategory(links, update);
+         update.println(description);
+      } catch (Exception e) {
+      }
    }
    
    private void printCategory (ArrayList<String> category, PrintStream writer) {
@@ -96,7 +102,7 @@ public class Object {
       }
    }
    
-   private void deleteConnection (String toDelete, ArrayList<String> list, boolean selected) throws FileNotFoundException, IOException {
+   private void deleteConnection (String toDelete, ArrayList<String> list, boolean selected) {
       list.remove(toDelete);
       if (selected == true) {
          Object temp = new Object (toDelete, set);
@@ -111,35 +117,37 @@ public class Object {
       update();
    }
    
-   private void addConnection (String newConnection, ArrayList<String> list, boolean done) throws FileNotFoundException, IOException {
-      if (newConnection.contains("*") == false
-         && supers.indexOf(newConnection) == -1
-         && subs.indexOf(newConnection) == -1
-         && links.indexOf(newConnection) == -1
-         && newConnection.contains("\\") == false) {
-         list.add(newConnection);
-         if (done == false) {
-            File tempFile = new File("data\\" + set + "\\" + newConnection + ".txt");
-            if (!tempFile.exists()) {
-               tempFile.createNewFile();
-               PrintStream addDots = new PrintStream (tempFile);
-               addDots.println("*");
-               addDots.println("*");
-               addDots.println("*");
+   private void addConnection (String newConnection, ArrayList<String> list, boolean done) {
+      try {
+         if (newConnection.contains("*") == false
+            && supers.indexOf(newConnection) == -1
+            && subs.indexOf(newConnection) == -1
+            && links.indexOf(newConnection) == -1
+            && newConnection.contains("\\") == false) {
+            list.add(newConnection);
+            if (done == false) {
+               File tempFile = new File("data\\" + set + "\\" + newConnection + ".txt");
+               if (!tempFile.exists()) {
+                  tempFile.createNewFile();
+                  PrintStream addDots = new PrintStream (tempFile);
+                  addDots.println("*");
+                  addDots.println("*");
+                  addDots.println("*");
+               }
+               Object temp = new Object (newConnection, set);
+               if (list.equals(supers)) {
+                  temp.addSub(name, true);
+               } else if (list.equals(subs)) {
+                  temp.addSuper(name, true);
+               } else if (list.equals(links)) {
+                  temp.addLink(name, true);
+               }
             }
-            Object temp = new Object (newConnection, set);
-            if (list.equals(supers)) {
-               temp.addSub(name, true);
-            } else if (list.equals(subs)) {
-               temp.addSuper(name, true);
-            } else if (list.equals(links)) {
-               temp.addLink(name, true);
-            }
+         } else {
+            System.out.println("Please do not use the string name \"*\", a taken name, or one containing a backslash");
          }
-      } else {
-         System.out.println("Please do not use the string name \"*\", a taken name, or one containing a backslash");
+         update();
+      } catch (Exception e) {
       }
-      update();
    }
-   
 }

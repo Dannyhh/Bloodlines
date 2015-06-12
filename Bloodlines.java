@@ -3,18 +3,8 @@ import java.io.*;
 
 public class Bloodlines {
    
-   public static void main(String[] args) throws FileNotFoundException, IOException {
-      boolean running = true;
-      Object select = new Object ("Test1", "TestSet");
-      while (running) {
-         select = newObject(select);
-      }
-   }
-   
-   public static Object newObject (Object select) {
-      ObjUI UI = new ObjUI (select);
-      select = UI.waitForNext();
-      return select;
+   public static void main(String[] args) {
+      new ObjUI(new Object ("Test1", "TestSet"));
    }
    
    public static void chooseSet() throws FileNotFoundException, IOException {
