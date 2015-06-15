@@ -34,7 +34,7 @@ public class Bloodlines {
          }
          addSet.println(set);
          chooseSet();
-      } 
+      }
       else {
          Scanner defaultFile = new Scanner(new File("data\\" + set + "\\" + set + ".txt"));
          String firstSelect = defaultFile.next();

@@ -78,17 +78,6 @@ public class ObjUI extends UI {
       super.makeButton ("Add Link", "Add Link", width - 1, 3, 20, rules);
    }
    
-   /*private void makeButton (String name, String command, int column, int row, int height, GridBagConstraints rules) {
-      JButton newButton = new JButton (name);
-      newButton.setActionCommand (command);
-      newButton.addActionListener(this);
-      rules.gridx = column;
-      rules.gridy = row;
-      rules.ipady = height;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(newButton, rules);
-   }*/
-   
    public void actionPerformed (ActionEvent clicked) {
       String command = clicked.getActionCommand();
       if (selected.supers.contains(command) || selected.subs.contains(command) || selected.links.contains(command)) {
@@ -107,6 +96,11 @@ public class ObjUI extends UI {
             selected.deleteLink(command, true);
          }
          new ObjUI (selected);
+      } else if (command.contains("Add")) {
+         window.setVisible(false);
+         window.dispose();
+         command = command.substring(4, command.length());
+         new InputUI (selected, command);
       } else if (command.contains("Exit")) {
          window.setVisible(false);
          window.dispose();

@@ -32,17 +32,6 @@ public class SetUI extends UI {
       }
    }
    
-   /*private void makeButton (String name, String command, int column, int row, int height, GridBagConstraints rules) {
-      JButton newButton = new JButton (name);
-      newButton.setActionCommand (command);
-      newButton.addActionListener(this);
-      rules.gridx = column;
-      rules.gridy = row;
-      rules.ipady = height;
-      rules.fill = GridBagConstraints.BOTH;
-      window.getContentPane().add(newButton, rules);
-   }*/
-   
    public void actionPerformed (ActionEvent clicked) {
       try {
          String command = clicked.getActionCommand();
