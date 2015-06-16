@@ -6,7 +6,7 @@ public class Bloodlines {
    public static void main(String[] args) {
       new ObjUI(new Object ("Test1", "TestSet"));
    }
-   
+   /*
    public static void chooseSet() throws FileNotFoundException, IOException {
       Scanner input = new Scanner (System.in);
       Scanner setsFinder = new Scanner (new File("data\\Sets.txt"));
@@ -149,5 +149,5 @@ public class Bloodlines {
       if (continueOn) {
          showObject (selected);
       }
-   }
+   }*/
 }

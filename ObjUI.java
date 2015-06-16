@@ -79,14 +79,12 @@ public class ObjUI extends UI {
    }
    
    public void actionPerformed (ActionEvent clicked) {
+      window.setVisible(false);
+      window.dispose();
       String command = clicked.getActionCommand();
       if (selected.supers.contains(command) || selected.subs.contains(command) || selected.links.contains(command)) {
-         window.setVisible(false);
-         window.dispose();
          new ObjUI (new Object (command, selected.set));
       } else if (command.contains("Remove")) {
-         window.setVisible(false);
-         window.dispose();
          command = command.substring(7, command.length());
          if (selected.supers.contains(command)) {
             selected.deleteSuper(command, true);
@@ -97,19 +95,13 @@ public class ObjUI extends UI {
          }
          new ObjUI (selected);
       } else if (command.contains("Add")) {
-         window.setVisible(false);
-         window.dispose();
          command = command.substring(4, command.length());
          new InputUI (selected, command);
       } else if (command.equals("Exit")) {
-         window.setVisible(false);
-         window.dispose();
          new SetUI ();
       } else if (command.equals("Open Description")) {
          new DescUI (selected);
       } else if (command.equals("Delete")) {
-         window.setVisible(false);
-         window.dispose();
          selected.deleteSelf();
          new SetUI ();
       }

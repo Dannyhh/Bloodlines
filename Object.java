@@ -71,21 +71,35 @@ public class Object {
       for (String s : subs) {
          deleteSub (s, true);
       }
-      for (String s : links) {
+      ArrayList<String> temp = links;
+      for (String s : temp) {
          deleteLink (s, true);
       }
    }
    
-   private void update () {
+   private boolean update () {
       try {
          PrintStream update = new PrintStream (new File ("data\\" + set + "\\" + name + ".txt"));
-         update = printCategory(supers, update);
-         update = printCategory(subs, update);
-         update = printCategory(links, update);
+         for (String obj : supers) {
+            update.println(obj);
+         }
+         update.println("*");
+         for (String obj : subs) {
+            update.println(obj);
+         }
+         update.println("*");
+         for (String obj : links) {
+            update.println(obj);
+         }
+         update.println("*");
+         //update = printCategory(supers, update);
+         //update = printCategory(subs, update);
+         //update = printCategory(links, update);
          update.println(description);
          update.close();
       } catch (Exception e) {
       }
+      return true;
    }
    
    private PrintStream printCategory (ArrayList<String> category, PrintStream writer) {
@@ -107,14 +121,16 @@ public class Object {
    
    private boolean deleteConnection (String toDelete, ArrayList<String> list, boolean selected) {
       try {
-         list.remove(toDelete);
          if (selected) {
             Object temp = new Object (toDelete, set);
             if (list.equals(supers)) {
+               supers.remove(toDelete);
                temp.deleteSub(name, false);
             } else if (list.equals(subs)) {
+               subs.remove(toDelete);
                temp.deleteSuper(name, false);
             } else if (list.equals(links)) {
+               links.remove(toDelete);
                temp.deleteLink(name, false);
             }
          }
@@ -124,7 +140,7 @@ public class Object {
       return true;
    }
    
-   private void addConnection (String newConnection, ArrayList<String> list, boolean done) {
+   private boolean addConnection (String newConnection, ArrayList<String> list, boolean done) {
       try {
          list.add(newConnection);
          if (done == false) {
@@ -146,8 +162,8 @@ public class Object {
                temp.addLink(name, true);
             }
          }
-         update();
       } catch (Exception e) {
       }
+      return update();
    }
 }
