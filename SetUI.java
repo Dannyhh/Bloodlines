@@ -28,6 +28,7 @@ public class SetUI extends UI {
             makeButton (set, set, count, 0, 20, rules);
             count++;
          }
+         makeButton ("New Set", "New", count, 0, 20, rules);
       } catch (Exception e) {
       }
    }
@@ -35,8 +36,12 @@ public class SetUI extends UI {
    public void actionPerformed (ActionEvent clicked) {
       try {
          String command = clicked.getActionCommand();
-         Scanner defaultFile = new Scanner(new File("data\\" + command + "\\" + command + ".txt"));
-         new ObjUI (new Object (defaultFile.next(), command));
+         if (command.equals("New")) {
+            new InputUI();
+         } else {
+            Scanner defaultFile = new Scanner(new File("data\\" + command + "\\" + command + ".txt"));
+            new ObjUI (new Object (defaultFile.next(), command));
+         }
       } catch (Exception e) {
       }
    }

@@ -76,6 +76,7 @@ public class InputUI extends UI {
                   for (String aSet : sets) {
                      addSet.println(aSet);
                   }
+                  addSet.println(text);
                   File newDir = new File("data\\" + text);
                   newDir.mkdir();
                   File setOrigin = new File("data\\" + text + "\\" + text + ".txt");

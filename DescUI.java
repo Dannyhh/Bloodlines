@@ -26,8 +26,11 @@ public class DescUI extends UI {
       rules.gridwidth = 2;
       rules.fill = GridBagConstraints.BOTH;
       window.getContentPane().add(textArea, rules);
+      rules.gridwidth = 1;
       makeButton("Edit", "Edit", 0, 1, 0, rules);
       makeButton("Exit", "Exit", 1, 1, 0, rules);
+      window.pack();
+      window.setVisible(true);
    }
    
    public void actionPerformed (ActionEvent clicked) {
@@ -36,6 +39,8 @@ public class DescUI extends UI {
       window.dispose();
       if (command.equals("Edit")) {
          new InputUI (selected);
+      } else if (command.equals("Exit")) {
+         new ObjUI (selected);
       }
    }
 }

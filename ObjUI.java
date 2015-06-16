@@ -45,7 +45,7 @@ public class ObjUI extends UI {
       // Deletes Selected
       super.makeButton ("Delete", "Delete", (width / 2), 4, 0, rules);
       // Exit Selected Set
-      super.makeButton ("Exit Set", "Exit Set", (width / 2) + 1, 4, 0, rules);
+      super.makeButton ("Exit Set", "Exit", (width / 2) + 1, 4, 0, rules);
       // Supers
       int count = 0;
       for (String superObj : selected.supers) {
