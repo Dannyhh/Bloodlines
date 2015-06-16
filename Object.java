@@ -3,7 +3,6 @@ import java.io.*;
 
 public class Object {
    
-   private Scanner source;
    public String name;
    public String set;
    public String description;
@@ -20,15 +19,16 @@ public class Object {
          if (!sourceFile.exists()) {
             sourceFile.createNewFile();
          }
-         source = new Scanner (sourceFile);
+         Scanner source = new Scanner (sourceFile);
          description = "";
          try {
-            getSection(supers);
-            getSection(subs);
-            getSection(links);
+            source = getSection(supers, source);
+            source = getSection(subs, source);
+            source = getSection(links, source);
             if (source.hasNextLine()) {
                description = source.nextLine();
             }
+            source.close();
          } catch (NoSuchElementException e) {
             update();
          }
@@ -52,19 +52,19 @@ public class Object {
       description = replacement;
    }
    
-   public void deleteSuper (String superToDelete, boolean selected) {
-      deleteConnection(superToDelete, supers, selected);
+   public boolean deleteSuper (String superToDelete, boolean selected) {
+      return deleteConnection(superToDelete, supers, selected);
    }
    
-   public void deleteSub (String subToDelete, boolean selected) {
-      deleteConnection(subToDelete, subs, selected);
+   public boolean deleteSub (String subToDelete, boolean selected) {
+      return deleteConnection(subToDelete, subs, selected);
    }
    
-   public void deleteLink (String linkToDelete, boolean selected) {
-      deleteConnection(linkToDelete, links, selected);
+   public boolean deleteLink (String linkToDelete, boolean selected) {
+      return deleteConnection(linkToDelete, links, selected);
    }
    
-   public void deleteSelf () throws FileNotFoundException, IOException {
+   public void deleteSelf () {
       for (String s : supers) {
          deleteSuper (s, true);
       }
@@ -79,72 +79,72 @@ public class Object {
    private void update () {
       try {
          PrintStream update = new PrintStream (new File ("data\\" + set + "\\" + name + ".txt"));
-         printCategory(supers, update);
-         printCategory(subs, update);
-         printCategory(links, update);
+         update = printCategory(supers, update);
+         update = printCategory(subs, update);
+         update = printCategory(links, update);
          update.println(description);
+         update.close();
       } catch (Exception e) {
       }
    }
    
-   private void printCategory (ArrayList<String> category, PrintStream writer) {
+   private PrintStream printCategory (ArrayList<String> category, PrintStream writer) {
       for (String obj : category) {
          writer.println(obj);
       }
       writer.println("*");
+      return writer;
    }
    
-   private void getSection (ArrayList<String> section) {
+   private Scanner getSection (ArrayList<String> section, Scanner source) {
       String temp = source.nextLine();
       while (temp.equals("*") == false) {
          section.add(temp);
          temp = source.nextLine();
       }
+      return source;
    }
    
-   private void deleteConnection (String toDelete, ArrayList<String> list, boolean selected) {
-      list.remove(toDelete);
-      if (selected == true) {
-         Object temp = new Object (toDelete, set);
-         if (list.equals(supers)) {
-            temp.deleteSub(name, false);
-         } else if (list.equals(subs)) {
+   private boolean deleteConnection (String toDelete, ArrayList<String> list, boolean selected) {
+      try {
+         list.remove(toDelete);
+         if (selected) {
+            Object temp = new Object (toDelete, set);
+            if (list.equals(supers)) {
+               temp.deleteSub(name, false);
+            } else if (list.equals(subs)) {
                temp.deleteSuper(name, false);
-         } else if (list.equals(links)) {
+            } else if (list.equals(links)) {
                temp.deleteLink(name, false);
+            }
          }
+         update();
+      } catch (Exception e) {
       }
-      update();
+      return true;
    }
    
    private void addConnection (String newConnection, ArrayList<String> list, boolean done) {
       try {
-         if (newConnection.contains("*") == false
-            && supers.indexOf(newConnection) == -1
-            && subs.indexOf(newConnection) == -1
-            && links.indexOf(newConnection) == -1
-            && newConnection.contains("\\") == false) {
-            list.add(newConnection);
-            if (done == false) {
-               File tempFile = new File("data\\" + set + "\\" + newConnection + ".txt");
-               if (!tempFile.exists()) {
-                  tempFile.createNewFile();
-                  PrintStream addDots = new PrintStream (tempFile);
-                  addDots.println("*");
-                  addDots.println("*");
-                  addDots.println("*");
-               }
-               Object temp = new Object (newConnection, set);
-               if (list.equals(supers)) {
-                  temp.addSub(name, true);
-               } else if (list.equals(subs)) {
-                  temp.addSuper(name, true);
-               } else if (list.equals(links)) {
-                  temp.addLink(name, true);
-               }
+         list.add(newConnection);
+         if (done == false) {
+            File tempFile = new File("data\\" + set + "\\" + newConnection + ".txt");
+            if (!tempFile.exists()) {
+               tempFile.createNewFile();
+               PrintStream addDots = new PrintStream (tempFile);
+               addDots.println("*");
+               addDots.println("*");
+               addDots.println("*");
+               addDots.close();
             }
-         } else {
-            System.out.println("Please do not use the string name \"*\", a taken name, or one containing a backslash");
+            Object temp = new Object (newConnection, set);
+            if (list.equals(supers)) {
+               temp.addSub(name, true);
+            } else if (list.equals(subs)) {
+               temp.addSuper(name, true);
+            } else if (list.equals(links)) {
+               temp.addLink(name, true);
+            }
          }
          update();
       } catch (Exception e) {

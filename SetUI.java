@@ -25,7 +25,7 @@ public class SetUI extends UI {
          GridBagConstraints rules = new GridBagConstraints();
          int count = 0;
          for (String set : sets) {
-            super.makeButton (set, set, count, 0, 20, rules);
+            makeButton (set, set, count, 0, 20, rules);
             count++;
          }
       } catch (Exception e) {

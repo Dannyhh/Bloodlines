@@ -42,18 +42,19 @@ public class InputUI extends UI {
       window.setLayout(new GridBagLayout());
       window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       GridBagConstraints rules = new GridBagConstraints();
-      JTextArea textArea = new JTextArea("Please Enter a Legal String", 1, 27);
+      textArea = new JTextArea("Please Enter a Legal String", 1, 27);
       textArea.setEditable(false);
       rules.gridx = 0;
       rules.gridy = 0;
-      rules.gridwidth = 1;
-      rules.ipady = 40;
+      rules.gridwidth = 2;
       rules.fill = GridBagConstraints.BOTH;
       window.getContentPane().add(textArea, rules);
-      JTextField textField = new JTextField(27);
+      textField = new JTextField(27);
       textField.addActionListener(this);
+      rules.gridwidth = 1;
       rules.gridy = 1;
       window.getContentPane().add(textField, rules);
+      makeButton ("Enter", "Enter", 1, 1, 0, rules);
       window.pack();
       window.setVisible(true);
    }
@@ -61,6 +62,7 @@ public class InputUI extends UI {
    public void actionPerformed (ActionEvent entered) {
       try {
          String text = textField.getText();
+         window.setVisible(false);
          window.dispose();
          if (!text.contains("\\") && !text.equals("*")) {
             if (version.equals("Set")) {

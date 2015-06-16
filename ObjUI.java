@@ -55,7 +55,7 @@ public class ObjUI extends UI {
          count++;
       }
       // Adds supers
-      super.makeButton ("Add Upward Connection", "Add Upward Connection", width - 1, 0, 20, rules);
+      super.makeButton ("Add Upward Connection", "Add Super", width - 1, 0, 20, rules);
       // Subs
       count = 0;
       for (String subObj : selected.subs) {
@@ -65,7 +65,7 @@ public class ObjUI extends UI {
          count++;
       }
       // Adds subs
-      super.makeButton ("Add Downward Connection", "Add Downward Connection", width - 1, 6, 20, rules);
+      super.makeButton ("Add Downward Connection", "Add Sub", width - 1, 6, 20, rules);
       // Links
       count = 0;
       for (String linkedObj : selected.links) {
@@ -101,9 +101,16 @@ public class ObjUI extends UI {
          window.dispose();
          command = command.substring(4, command.length());
          new InputUI (selected, command);
-      } else if (command.contains("Exit")) {
+      } else if (command.equals("Exit")) {
          window.setVisible(false);
          window.dispose();
+         new SetUI ();
+      } else if (command.equals("Open Description")) {
+         new DescUI (selected);
+      } else if (command.equals("Delete")) {
+         window.setVisible(false);
+         window.dispose();
+         selected.deleteSelf();
          new SetUI ();
       }
    }
