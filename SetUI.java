@@ -34,15 +34,16 @@ public class SetUI extends UI {
    }
    
    public void actionPerformed (ActionEvent clicked) {
-      try {
-         String command = clicked.getActionCommand();
-         if (command.equals("New")) {
-            new InputUI();
-         } else {
-            Scanner defaultFile = new Scanner(new File("data\\" + command + "\\" + command + ".txt"));
-            new ObjUI (new Object (defaultFile.next(), command));
+      window.setVisible(false);
+      window.dispose();
+      String command = clicked.getActionCommand();
+      if (command.equals("New")) {
+         new InputUI();
+      } else {
+         try {
+            new ItemUI (new Item((new Scanner(new File("data\\" + command + "\\" + command + ".txt"))).next(), command));
+         } catch (Exception e) {
          }
-      } catch (Exception e) {
       }
    }
 }

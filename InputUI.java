@@ -6,7 +6,7 @@ import java.io.*;
 
 public class InputUI extends UI {
    
-   Object selected;
+   Item selected;
    String version;
    String defaultOf;
    String type;
@@ -24,14 +24,14 @@ public class InputUI extends UI {
       version = "Default";
    }
    
-   public InputUI (Object selected, String type) {
+   public InputUI (Item selected, String type) {
       this.selected = selected;
       this.type = type;
       renderAll();
-      version = "Object";
+      version = "Item";
    }
    
-   public InputUI (Object selected) {
+   public InputUI (Item selected) {
       this.selected = selected;
       renderAll();
       version = "Description";
@@ -88,16 +88,16 @@ public class InputUI extends UI {
             } else if (version.equals("Default")) {
                PrintStream addDefault = new PrintStream (new File ("data\\" + defaultOf + "\\" + defaultOf + ".txt"));
                addDefault.println(text);
-               new ObjUI (new Object (text, defaultOf));
-            } else if (version.equals("Object")) {
+               new ItemUI (new Item (text, defaultOf));
+            } else if (version.equals("Item")) {
                if (type.equals("Super")) {
-                  selected.addSuper(text, false);
+                  selected.addConnection(text, selected.supers, true);
                } else if (type.equals("Sub")) {
-                  selected.addSub(text, false);
+                  selected.addConnection(text, selected.subs, true);
                } else if (type.equals("Link")) {
-                  selected.addLink(text, false);
+                  selected.addConnection(text, selected.links, true);
                }
-               new ObjUI (new Object (text, selected.set));
+               new ItemUI (new Item (text, selected.set));
             } else if (version.equals("Description")) {
                selected.newDescription(text);
                new DescUI (selected);
@@ -107,7 +107,7 @@ public class InputUI extends UI {
                new InputUI ();
             } else if (version.equals("Default")) {
                new InputUI (defaultOf);
-            } else if (version.equals("Object")) {
+            } else if (version.equals("Item")) {
                new InputUI (selected, type);
             } else if (version.equals("Description")) {
                new InputUI (selected);

@@ -6,16 +6,16 @@ import java.io.*;
 
 public class DescUI extends UI {
    
-   Object selected;
+   Item selected;
    JTextArea textArea;
    
-   public DescUI (Object selected) {
+   public DescUI (Item selected) {
       this.selected = selected;
       renderAll();
    }
    
    public void renderAll () {
-      window = new JFrame ("Bloodlines: Object" + selected.name + "'s Description");
+      window = new JFrame ("Bloodlines: Item" + selected.name + "'s Description");
       window.setLayout(new GridBagLayout());
       window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       GridBagConstraints rules = new GridBagConstraints();
@@ -40,7 +40,7 @@ public class DescUI extends UI {
       if (command.equals("Edit")) {
          new InputUI (selected);
       } else if (command.equals("Exit")) {
-         new ObjUI (selected);
+         new ItemUI (selected);
       }
    }
 }
